@@ -10,3 +10,4 @@
  generator yield
 
 # Promise A+规范   
+ 规范学习
