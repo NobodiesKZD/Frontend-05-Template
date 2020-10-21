@@ -47,13 +47,106 @@
             source.push(token);
         }
 
-        // 每个产生式对应一个函数
-        function Expression(tokens){
 
+//         [
+//   {
+//     "type": "Number",
+//     "value": "1024"
+//   },
+//   {
+//     "type": "Whitespace",
+//     "value": " "
+//   },
+//   {
+//     "type": "+",
+//     "value": "+"
+//   },
+//   {
+//     "type": "Whitespace",
+//     "value": " "
+//   },
+//   {
+//     "type": "Number",
+//     "value": "10"
+//   },
+//   {
+//     "type": "Whitespace",
+//     "value": " "
+//   },
+//   {
+//     "type": "*",
+//     "value": "*"
+//   },
+//   {
+//     "type": "Whitespace",
+//     "value": " "
+//   },
+//   {
+//     "type": "Number",
+//     "value": "25"
+//   },
+//   {
+//     "type": "EOF"
+//   }
+// ]
+
+        // 每个产生式对应一个函数
+        function Expression(source){
+            if(source[0].type === "AdditiveExpression" && source[1] && source[1].type === "EOF"){
+                let node = {
+                    type: "Expression",
+                    children: [source.shift(), source.shift()]
+                };
+                source.unshift(node);
+                return node;
+            }
+            AdditiveExpression(source);
+            return Expression(source);
         }
 
         function AdditiveExpression(source){
+            if(source[0].type === "MultiplicativeExpression"){
+                let node = {
+                    type: "AdditiveExpression",
+                    children: [source[0]]
+                };
+                source[0] = node;
+                return AdditiveExpression(source);
+            }
 
+            if(source[0].type === "AdditiveExpression" && source[1] && source[1].type === "+"){
+                let node = {
+                    type: "AdditiveExpression",
+                    operator: "+",
+                    children: []
+                };
+                node.children.push(source.shift());
+                node.children.push(source.shift());
+                MultiplicativeExpression(source);
+                node.children.push(source.shift());
+                source.unshift(node);
+                return AdditiveExpression(source);
+            }
+
+            if(source[0].type === "AdditiveExpression" && source[1] && source[1].type === "-"){
+                let node = {
+                    type: "AdditiveExpression",
+                    operator: "-",
+                    children: []
+                };
+                node.children.push(source.shift());
+                node.children.push(source.shift());
+                MultiplicativeExpression(source);
+                node.children.push(source.shift());
+                source.unshift(node);
+                return AdditiveExpression(source);
+            }
+
+            if(source[0].type === "AdditiveExpression"){
+                return source[0];
+            }
+            MultiplicativeExpression(source);
+            return AdditiveExpression(source);
         }
 
         function MultiplicativeExpression(source){ // 乘法
@@ -101,7 +194,7 @@
             return MultiplicativeExpression(source);
         }
 
-       console.log(MultiplicativeExpression(source));
+        console.log(Expression(source));
     </script>
 </body>
 </html>
