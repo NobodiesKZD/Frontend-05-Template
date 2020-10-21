@@ -16,8 +16,8 @@
             while(true){
                 lastIndex = regexp.lastIndex;
                 result = regexp.exec(source);
-                console.log(lastIndex);
-                console.log(result);
+                // console.log(lastIndex);
+                // console.log(result);
                 if(!result) break;
 
                 if(regexp.lastIndex - lastIndex > result[0].length) break;
