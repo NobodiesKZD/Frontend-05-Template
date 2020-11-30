@@ -2,6 +2,7 @@ function match(str){
     let state = start;
     for(let c of str){
         state = state(c);
+        console.log(state.name);
     }
     return state === end;
 }
@@ -15,7 +16,7 @@ function start(c){
         return foundA;
     }
     else{
-        return start;
+        return start(c);
     }
 }
 
@@ -24,7 +25,7 @@ function foundA(c){
         return foundB;
     }
     else{
-        return start;
+        return start(c);
     }
 }
 
@@ -33,7 +34,7 @@ function foundB(c){
         return foundC;
     }
     else{
-        return start;
+        return start(c);
     }
 }
 
@@ -42,7 +43,7 @@ function foundC(c){
         return foundD;
     }
     else{
-        return start;
+        return start(c);
     }
 }
 
@@ -51,7 +52,7 @@ function foundD(c){
         return foundE;
     }
     else{
-        return start;
+        return start(c);
     }
 }
 
@@ -60,8 +61,8 @@ function foundE(c){
         return end;
     }
     else{
-        return start;
+        return start(c);
     }
 }
 
-console.log(match('abcedfrgg robot'));
+console.log(match('abcdefrgg robot'));
